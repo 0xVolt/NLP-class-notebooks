@@ -61,7 +61,7 @@ def build_freqs(tweets, ys):
     # and over all processed words in each tweet.
     freqs = {}
     for y, tweet in zip(yslist, tweets):
-        for word in process_tweet(tweet):
+        for word in tweet:
             pair = (word, y)
             if pair in freqs:
                 freqs[pair] += 1
