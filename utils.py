@@ -8,12 +8,12 @@ from nltk.tokenize import TweetTokenizer
 
 
 def process_tweet(tweet):
-    """Process tweet function.
+    """
+    Process tweet function.
     Input:
         tweet: a string containing a tweet
     Output:
         tweets_clean: a list of words containing the processed tweet
-
     """
     stemmer = PorterStemmer()
     stopwords_english = stopwords.words('english')
@@ -43,7 +43,8 @@ def process_tweet(tweet):
 
 
 def build_freqs(tweets, ys):
-    """Build frequencies.
+    """
+    Build frequencies.
     Input:
         tweets: a list of tweets
         ys: an m x 1 array with the sentiment label of each tweet
