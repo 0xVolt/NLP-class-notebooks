@@ -1,81 +1,45 @@
-# ### Parts-of-Speech Tagging (POS)
-# 
-# Part-of-speech (POS) tagging is the process of assigning a part-of-speech tag (Noun, Verb, Adjective...) to each word in an input text.  Tagging is difficult because some words can represent more than one part of speech at different times. They are  **Ambiguous**. Let's look at the following example: 
-# 
-# - The whole team played **well**. [adverb]
-# - You are doing **well** for yourself. [adjective]
-# - **Well**, this assignment took me forever to complete. [interjection]
-# - The **well** is dry. [noun]
-# - Tears were beginning to **well** in her eyes. [verb]
-# 
-# 
-# - Learn how parts-of-speech tagging works
-# - Compute the transition matrix A in a Hidden Markov Model
-# - Compute the transition matrix B in a Hidden Markov Model
-# - Compute the Viterbi algorithm 
-# - Compute the accuracy of your own model 
-# 
-
-# %%
+# %% Import libraries | Start of the program
 
 import pandas as pd
 from collections import defaultdict
-from collections import Counter # To create an counter over our Vocab dictionary
+from collections import Counter
 import math
 import numpy as np
 import string
 
-# %%
-
-# Create Vocab from the training data and save it to hmm_vocab.txt
+# %% Create Vocab from the training data and save it to hmm_vocab.txt
 
 with open("../data/WSJ_02-21.pos", 'r') as f:
     lines = f.readlines()
 
 print('First 5 lines read from the \'WSJ_02-21.pos\' file:\n', lines[:5], end='')
 
-# %%
-
-# Creating list of words, frequencyDictionary and vocabulary
+# %% Creating list of words, frequencyDictionary and vocabulary
 
 # Splitting the lines read by '\t'
 words = [line.split('\t')[0] for line in lines]
 
-# 
-freq = Counter(words)
+# Using a counter to derive a frequency dictionary
+frequecyDictionary = Counter(words)
 
-vocab = [key for key, value in freq.items() if (value > 2 and key!='\n')]
+# Creating a vocabulary list using the dictionary we just derived
+# Only those values of count that are greater than 2 and aren't a new line character, are considered
+vocab = [key for key, value in freq.items() if (value > 2 and key != '\n')]
 vocab.sort()
 
-# %%
-for i, item in enumerate(freq.items()):
+# %% Printing out the first 5 elements in our frequency dictionary
+
+# Enumerating over the dictionary to get an index
+print('Printing the first 5 elements in our sorted dictionary of frequencies:')
+for i, item in enumerate(frequecyDictionary.items()):
     print(item)
+    
     if i > 5:
         break
 
-# %% [markdown]
-# ## Handling unknown tokens
-# A POS tagger will always encounter words that are not within the vocabulary that is being used. By augmenting the dataset to include these `unknown word tokens` you are helping the tagger to have a better idea of the appropriate tag for these words. 
-# 
-# To tackle this, you can simply classify each new word as an unknown one, but you can do better by creating a function that tries to classify the type of each unknown word and assign it a corresponding `unknown token`. 
-# 
-# This function will do the following checks and return an appropriate token:
-# 
-#    - Check if the unknown word contains any character that is a digit 
-#        - return `--unk_digit--`
-#    - Check if the unknown word contains any punctuation character 
-#        - return `--unk_punct--`
-#    - Check if the unknown word contains any upper-case character 
-#        - return `--unk_upper--`
-#    - Check if the unknown word ends with a suffix that could indicate it is a noun, verb, adjective or adverb 
-#         - return `--unk_noun--`, `--unk_verb--`, `--unk_adj--`, `--unk_adv--` respectively
-# 
-# If a word fails to fall under any condition then its token will be a plain `--unk--`. The conditions will be evaluated in the same order as listed here. So if a word contains a punctuation character but does not contain digits, it will fall under the second condition. 
-# 
-# any function returns `True` if at least one of the cases it evaluates is `True`.
+# %% Using the set of punctuation marks from the string library
 
-# %%
-print(set(string.punctuation))
+print(f'Here are the set of punctuation marks in the string library:\n{set(string.punctuation)}\nLength: {len(set(string.punctuation))}')
 
 # %%
 def assign_unk(word):
