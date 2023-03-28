@@ -20,18 +20,18 @@ print('First 5 lines read from the \'WSJ_02-21.pos\' file:\n', lines[:5], end=''
 words = [line.split('\t')[0] for line in lines]
 
 # Using a counter to derive a frequency dictionary
-frequecyDictionary = Counter(words)
+frequencyDictionary = Counter(words)
 
 # Creating a vocabulary list using the dictionary we just derived
 # Only those values of count that are greater than 2 and aren't a new line character, are considered
-vocab = [key for key, value in freq.items() if (value > 2 and key != '\n')]
+vocab = [key for key, value in frequencyDictionary.items() if (value > 2 and key != '\n')]
 vocab.sort()
 
 # %% Printing out the first 5 elements in our frequency dictionary
 
 # Enumerating over the dictionary to get an index
 print('Printing the first 5 elements in our sorted dictionary of frequencies:')
-for i, item in enumerate(frequecyDictionary.items()):
+for i, item in enumerate(frequencyDictionary.items()):
     print(item)
     
     if i > 5:
